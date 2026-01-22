@@ -6,12 +6,12 @@
 # OpenMeteoR
 We are creating an R wrapper for the open-meteo wordwide weather forecasting, predicting and historical weather data api's, these api's can be found at: https://open-meteo.com/. We will be providing various functions to both simplify the calling of the api's, but also to introduce more features and functionality from these api's. Some examples of the functions and features provided will include:  
   
-- A catch all function: weather.range(charts, rangeStart, rangeEnd, interval, locations = [], metrics = [], stats = [], stat_interval, timezone) used to determine the weather patterns in various locations, over a given range of time, with desired metrics and stats. The data will be returned as a dataframe, with the option to also return charts and graphs of the weather patterns for some of the metrics. The parameters include:
+- A catch all function: weather.range(charts, rangeStart, rangeEnd, interval, location, metrics = [], stats = [], stat_interval, timezone) used to determine the weather patterns in various locations, over a given range of time, with desired metrics and stats. The data will be returned as a dataframe, with the option to also return charts and graphs of the weather patterns for some of the metrics. The parameters include:
     - charts = True or False: used to return charts or not
     - rangeStart: the start date of the weather time range, can be as early as 1940 or as late as 35 days in the futue
     - rangeEnd: The end date of the weather time range
-    - interval: The time between succesive weather data points (any number of hours, days, weeks, months, or years), deafult is hourly.
-    - locations: An array of locations to obtain the weather data from. Can be an address, city name, name of a place, or longitude and latitude.
+    - interval: The time between succesive weather data points (any number of hours, days, weeks, months, or years), default is hourly.
+    - location: A string of the weather location to obtain the weather data from. Can be an address, city name, name of a place, or longitude and latitude.
     - metrics: Array of metrics to be taken, for example ["temp", "rain", "feels like"], default is all metrics
     - stats: Array of stats taken on the metrics, for example ["mean", "median", "max"] would take mean, median and max of the "temp", "rain", and "feels like" metrics. Default is max and min, or exact value for hourly measurements.
     - stat_interval: the interval time for the stats to be taken, default is equal to interval
