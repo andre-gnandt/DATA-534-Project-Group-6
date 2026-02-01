@@ -9,6 +9,6 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: knitr, rmarkdown
-Imports: testthat, countrycode, httr, jsonlite, tidygeocoder, stringr, methods
+Imports: testthat, tibble, countrycode, httr, jsonlite, tidygeocoder, stringr, methods
 URL: 
 Config/testthat/edition: 3

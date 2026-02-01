@@ -6,17 +6,21 @@
 #' @import countrycode
 NULL
 
-#' GEO API Client
 #'
-#' Reference class for interacting with the GeoDB API.
-#'
-#'@export
+#' @title GEO API Client
+#' @description Reference class for interacting with the GeoDB API.
+#' @export
 GEO <- setRefClass("GEO",
   fields = list(api_key = "character", max_limit = "numeric", base_url = "character"),
   
   methods = list(
     
     initialize = function(api_key = "", max_limit = 10){
+      "description: This is the constructor for this class.\\cr
+       param - api_key (not required) : (character string) Only pass your api key if you are using the pro version, otherwise don't change this parameter and the free version is automatically used.\\cr
+       param - max_limit : (numeric integer) The default limit value for calling records from the GEO DB api, check  with your plan to see what your maximum is. 
+      "
+      
       api_key <<- api_key
       max_limit <<- 10
       base_url <<- "http://geodb-free-service.wirefreethought.com/v1/geo/"
@@ -27,6 +31,10 @@ GEO <- setRefClass("GEO",
     },
     
     makeRequest = function(url){
+      "description: Helper method to make api request to the given url.\\cr
+       param - url (required): (string) of the url to make the request\\cr
+       return value: returns the response in JSON format"
+      
       request <- GET(url)
       response <- fromJSON(content(request, as = "text", encoding = "UTF-8"))
       
@@ -40,6 +48,9 @@ GEO <- setRefClass("GEO",
     },
     
     getCountryNamesAndCodes = function(){
+      "description: Helper method to get a dataframe of all country names and country codes.\\cr
+       return value: returns the dataframe with columns: name, code2, and code3"
+      
       df = (data.frame(
         name = as.character(codelist$country.name.en),
         code2 = as.character(codelist$iso2c),
@@ -50,15 +61,11 @@ GEO <- setRefClass("GEO",
       return (df)
     },
     
-    translateIdsToDelimitedString = function(Ids){
-      if(is.atomic(Ids) && length(Ids) == 1 && !is.array(Ids)){
-        Ids = c(as.character(Ids))
-      }
-      
-      return (paste(Ids, collapse = ","))
-    },
-    
     getClosestMatchingCountryNamesOrCodes = function(countries){
+      "description: Helper method to get a list of the corresponding country codes of a given list of country names and/or codes.\\cr
+       param - countries (required): (character vector or character array) the given country codes and/or country names\\cr
+       return value: returns a comma delimited string of the matching country codes, or NULL if none matched"
+      
       countriesLookup <- getCountryNamesAndCodes()
       
       if(is.atomic(countries) && length(countries) == 1 && !is.array(countries)){
@@ -104,6 +111,11 @@ GEO <- setRefClass("GEO",
     },
     
     convertLongitudeLatitudeToISO = function(lat, long){
+      "description: Helper method to convert lat and long numeric valies to the ISO lat/long formatted string.\\cr
+       param - lat (required): (numeric) the latitude value\\cr
+       param - long (required): (numeric) the longitude value\\cr
+       return value: returns the ISO formatted string of the long and lat coordinates"
+      
       lat <- sprintf("%2.4f", lat)
       long <- sprintf("%3.4f", long)
       
@@ -117,6 +129,10 @@ GEO <- setRefClass("GEO",
     },
     
     getLongitudeLatitude = function(location){
+      "description: Helper method to get the ISO formatted long/lat string of a given address or place name.\\cr
+       param - location (required): (character  string) the latitude value\\cr
+       return value: returns the ISO formatted string of the given location"
+      
       geocoded_address <- geo(address = location, method='osm', lat=latitude,long=longitude)
       
       return (convertLongitudeLatitudeToISO(geocoded_address[1,2],geocoded_address[1,3]))
@@ -129,6 +145,16 @@ GEO <- setRefClass("GEO",
                                   name = NULL,
                                   offset = 0, 
                                   limit = NULL){
+      "description: Method used to find all countries and their data using the GEO db cities api\\cr
+       param - currencyCode: (character string) Filter by ISO currency code\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe
+       param - namePrefix: (character string) Prefix match on country name\\cr
+       param - name: (character string) Exact country name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
+      
       request_url = paste0(base_url,"countries?offset=",offset)
       
       if(!is.null(limit)){
@@ -186,11 +212,33 @@ GEO <- setRefClass("GEO",
                                          includedCountryIds = NULL,
                                          distanceUnit = "KM", 
                                          radius = NULL, 
-                                         longitude = NULL, 
-                                         latitude = NULL, 
-                                         locationAddress = NULL, 
                                          offset = 0, 
                                          limit = NULL){
+      "description: Method used to find all places near a given place and their data using the GEO db api\\cr
+       param - charts: (boolean) true to return a chart map, false otherwise\\cr
+       param - placeId (conditionally required): (character string) the wikidataId or native 'id' of the nearby place, (this takes priority over placeName and placeAddress, see vignette for more details)\\cr
+       param - placeName (conditionally required): (character string) the name of the nearby place, (this is only used if placeId is NULL, see vignette for more details)\\cr
+       param - placeAddress (conditionally required): (character string) the address of the nearby place, (this is only used if placeId is NULL, see vignette for more details)\\cr
+       param - includeDistricts : (boolean) True if you would like to include districts in the returned places, false otherwise.\\cr
+       param - includeCities : (boolean) True if you would like to include cities in the returned places, false otherwise.\\cr
+       param - includeIslands : (boolean) True if you would like to include islands in the returned places, false otherwise.\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe\\cr
+       param - includeDeleted: (string either ALL, or NONE, or SINCE_YESTERDAY or SINCE_LAST_WEEK, default is NONE), used to include places that were deleted\\cr
+       param - namePrefix: (character string) Prefix match on country name\\cr
+       param - name: (character string) Exact country name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - maxPopulation: (numeric integer) filter by max population of places.\\cr
+       param - minPopulation: (numeric integer) filter by min population of places.\\cr
+       param - excludedCountries: (character vector) vector of excluded country names (will not include places from these countries)\\cr
+       param - excludedCountryIds: (character vector) vector of excluded country wikiDataId's or codes (will not include places from these countries)\\cr
+       param - includedCountries: (character vector) vector of included country names (only include places from these countries)\\cr
+       param - includedCountryIds: (character vector) vector of included country wikiDataId's or codes (only include places from these countries)\\cr
+       param - distanceUnit: (character string MI or KM) default value is KM, determines if distances are measured in Kilometres or Miles\\cr
+       param - radius: (numeric integer) radius from nearby places to find place, measured in distanceUnit, default is the max radius of your plan\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
+      
       if(is.null(placeAddress) && is.null(placeId) && is.null(placeName)){
         print("ERROR: Either placeId, placeAddress, or placeName is required")
         
@@ -338,6 +386,30 @@ GEO <- setRefClass("GEO",
                                locationAddress = NULL, 
                                offset = 0, 
                                limit = NULL){
+      "description: Method used to find all places and their data using the GEO db api\\cr
+       param - charts: (boolean) true to return a chart map, false otherwise\\cr
+       param - includeDistricts : (boolean) True if you would like to include districts in the returned places, false otherwise.\\cr
+       param - includeCities : (boolean) True if you would like to include cities in the returned places, false otherwise.\\cr
+       param - includeIslands : (boolean) True if you would like to include islands in the returned places, false otherwise.\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe\\cr
+       param - includeDeleted: (string either ALL, or NONE, or SINCE_YESTERDAY or SINCE_LAST_WEEK, default is NONE), used to include places that were deleted\\cr
+       param - namePrefix: (character string) Prefix match on place name\\cr
+       param - name: (character string) Exact place name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - maxPopulation: (numeric integer) filter by max population of places.\\cr
+       param - minPopulation: (numeric integer) filter by min population of places.\\cr
+       param - excludedCountries: (character vector) vector of excluded country names (will not include places from these countries)\\cr
+       param - excludedCountryIds: (character vector) vector of excluded country wikiDataId's or codes (will not include places from these countries)\\cr
+       param - includedCountries: (character vector) vector of included country names (only include places from these countries)\\cr
+       param - includedCountryIds: (character vector) vector of included country wikiDataId's or codes (only include places from these countries)\\cr
+       param - distanceUnit: (character string MI or KM) default value is KM, determines if distances are measured in Kilometres or Miles\\cr
+       param - radius: (numeric integer) radius from location to find place, measured in distanceUnit, default is the max radius of your plan\\cr
+       param - longitude: (numeric) longitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - latitude: (numeric) latitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - locationAddress: (character string) the address or name of location in which to find places (only used if longitude or latitude is NULL, see vignette for more details)\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
       
       request_url = paste0(base_url,"places?offset=",offset,"&distanceUnit=",distanceUnit)
       
@@ -445,12 +517,56 @@ GEO <- setRefClass("GEO",
       return (list(count = count, data = as.data.frame(data)))
     },
     
-    FindIslands = function(Cities = FALSE, ...){
-      return (FindPlaces(includeCities = Cities, includeDistricts = FALSE, ...))
+    FindIslands = function(...){
+      "description: Method used to find all Islands and their data using the GEO db api\\cr
+       param - charts: (boolean) true to return a chart map, false otherwise\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe\\cr
+       param - includeDeleted: (string either ALL, or NONE, or SINCE_YESTERDAY or SINCE_LAST_WEEK, default is NONE), used to include places that were deleted\\cr
+       param - namePrefix: (character string) Prefix match on Island name\\cr
+       param - name: (character string) Exact country name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - maxPopulation: (numeric integer) filter by max population of islands\\cr
+       param - minPopulation: (numeric integer) filter by min population of islands\\cr
+       param - excludedCountries: (character vector) vector of excluded country names (will not include places from these countries)\\cr
+       param - excludedCountryIds: (character vector) vector of excluded country wikiDataId's or codes (will not include places from these countries)\\cr
+       param - includedCountries: (character vector) vector of included country names (only include places from these countries)\\cr
+       param - includedCountryIds: (character vector) vector of included country wikiDataId's or codes (only include places from these countries)\\cr
+       param - distanceUnit: (character string MI or KM) default value is KM, determines if distances are measured in Kilometres or Miles\\cr
+       param - radius: (numeric integer) radius from location to find place, measured in distanceUnit, default is the max radius of your plan\\cr
+       param - longitude: (numeric) longitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - latitude: (numeric) latitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - locationAddress: (character string) the address or name of location in which to find places (only used if longitude or latitude is NULL, see vignette for more details)\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
+      
+      return (FindPlaces(includeCities = FALSE, includeDistricts = FALSE, ...))
     },
     
-    FindDistricts = function(Cities = FALSE, ...){
-      return (FindCities(includeCities = Cities, ...))
+    FindDistricts = function(...){
+      "description: Method used to find all Districts and their data using the GEO db api\\cr
+       param - charts: (boolean) true to return a chart map, false otherwise\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe\\cr
+       param - includeDeleted: (string either ALL, or NONE, or SINCE_YESTERDAY or SINCE_LAST_WEEK, default is NONE), used to include places that were deleted\\cr
+       param - namePrefix: (character string) Prefix match on Districts name\\cr
+       param - name: (character string) Exact Districts name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - maxPopulation: (numeric integer) filter by max population of Districts\\cr
+       param - minPopulation: (numeric integer) filter by min population of Districts\\cr
+       param - excludedCountries: (character vector) vector of excluded country names (will not include Districts from these countries)\\cr
+       param - excludedCountryIds: (character vector) vector of excluded country wikiDataId's or codes (will not include Districts from these countries)\\cr
+       param - includedCountries: (character vector) vector of included country names (only include Districts from these countries)\\cr
+       param - includedCountryIds: (character vector) vector of included country wikiDataId's or codes (only include Districts from these countries)\\cr
+       param - distanceUnit: (character string MI or KM) default value is KM, determines if distances are measured in Kilometres or Miles\\cr
+       param - radius: (numeric integer) radius from location to find place, measured in distanceUnit, default is the max radius of your plan\\cr
+       param - longitude: (numeric) longitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - latitude: (numeric) latitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - locationAddress: (character string) the address or name of location in which to find places (only used if longitude or latitude is NULL, see vignette for more details)\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
+      
+      return (FindCities(includeCities = FALSE, ...))
     },
     
     FindCities = function(includeDistricts = FALSE, 
@@ -473,6 +589,29 @@ GEO <- setRefClass("GEO",
                                locationAddress = NULL, 
                                offset = 0, 
                                limit = NULL){
+      "description: Method used to find all Cities and their data using the GEO db api\\cr
+       param - charts: (boolean) true to return a chart map, false otherwise\\cr
+       param - includeDistricts : (boolean) Default is false. True if you would like to include districts in the returned places, false otherwise.\\cr
+       param - includeCities : (boolean)Default is true, True if you would like to include cities in the returned places, false otherwise.\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe\\cr
+       param - includeDeleted: (string either ALL, or NONE, or SINCE_YESTERDAY or SINCE_LAST_WEEK, default is NONE), used to include places that were deleted\\cr
+       param - namePrefix: (character string) Prefix match on Cities name\\cr
+       param - name: (character string) Exact City name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - maxPopulation: (numeric integer) filter by max population of City\\cr
+       param - minPopulation: (numeric integer) filter by min population of City\\cr
+       param - excludedCountries: (character vector) vector of excluded country names (will not include City from these countries)\\cr
+       param - excludedCountryIds: (character vector) vector of excluded country wikiDataId's or codes (will not include City from these countries)\\cr
+       param - includedCountries: (character vector) vector of included country names (only include City from these countries)\\cr
+       param - includedCountryIds: (character vector) vector of included country wikiDataId's or codes (only include City from these countries)\\cr
+       param - distanceUnit: (character string MI or KM) default value is KM, determines if distances are measured in Kilometres or Miles\\cr
+       param - radius: (numeric integer) radius from location to find place, measured in distanceUnit, default is the max radius of your plan\\cr
+       param - longitude: (numeric) longitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - latitude: (numeric) latitude value of the nearby location in which to find places (this takes priority over locationAddress, see vignette for more details)\\cr
+       param - locationAddress: (character string) the address or name of location in which to find places (only used if longitude or latitude is NULL, see vignette for more details)\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
       
       request_url = paste0(base_url,"cities?offset=",offset,"&distanceUnit=",distanceUnit)
       
@@ -586,9 +725,26 @@ GEO <- setRefClass("GEO",
                                                    maxPopulation = NULL, 
                                                    minPopulation = NULL, 
                                                    offset = 0, 
-                                                   limit = NULL
-    ){
-      #request_url = paste0(base_url,"places?offset=",offset,"&distanceUnit=",distanceUnit)
+                                                   limit = NULL){
+      "description: Method used to find all places in a given country and region using the GEO db api\\cr
+       param - charts: (boolean) true to return a chart map, false otherwise\\cr
+       param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\\cr
+       param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\\cr
+       param - region (conditionally required): (character string) name of the given Region (only used if regionId is NULL, see vignette for more details)\\cr
+       param - regionId (conditionally required): (character string) wikidataId or region code of given region (takes priority over region param, see vignette for more details)\\cr
+       param - includeDistricts : (boolean) True if you would like to include districts in the returned places, false otherwise.\\cr
+       param - includeCities : (boolean) True if you would like to include cities in the returned places, false otherwise.\\cr
+       param - includeIslands : (boolean) True if you would like to include islands in the returned places, false otherwise.\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe\\cr
+       param - includeDeleted: (string either ALL, or NONE, or SINCE_YESTERDAY or SINCE_LAST_WEEK, default is NONE), used to include places that were deleted\\cr
+       param - namePrefix: (character string) Prefix match on place name\\cr
+       param - name: (character string) Exact place name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - maxPopulation: (numeric integer) filter by max population of places.\\cr
+       param - minPopulation: (numeric integer) filter by min population of places.\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
       
       if((is.null(country) && is.null(countryId)) || (is.null(region) && is.null(regionId))){
         print("ERROR: either country or countryId is required, and either region or regionId is required.")
@@ -688,6 +844,15 @@ GEO <- setRefClass("GEO",
     },
     
     FindRegions.ByCountry = function(includeAllColumns = FALSE, columns = NULL, country = NULL, countryId = NULL, limit = NULL, offset = 0, name = NULL){
+      "description: Method used to find all Regions and their data in a given country using the GEO db api\\cr
+       param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\\cr
+       param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\\cr
+       param - includeAllColumns: (boolean) Logical return all columns\\cr
+       param - columns: (character vector) column names to include in returned dataframe\\cr
+       param - name: (character string) Exact place name (takes priority over 'namePrefix', see vignette for more details.)\\cr
+       param - offset: (numeric integer) Returned data offset, default is 0\\cr
+       param - limit: (numeric integer) Maximum number of results, equal to 'max_limit' field by default\\cr
+       return value: A list with `count` for number of returned records, and `data` for the clean dataframe"
       
       if(is.null(country) && is.null(countryId)){
         print("ERROR: Either 'country' or 'countryId' parameter is required for this function.")
@@ -733,6 +898,17 @@ GEO <- setRefClass("GEO",
     },
     
     Distance.Between.Places = function(distanceUnit = "KM",fromId = NULL , fromAddress = NULL, fromName= NULL, toId= NULL, toAddress= NULL, toName= NULL){
+      "description: Method used to determine the distance between 2 places\\cr
+       param - fromId (conditionally required): (character string) the wikidataId of the from place. (Takes priority over fromName and fromAddress, see vignette for more details)\\cr
+       param - fromName (conditionally required): (character string) the Name of the from place. (Only used if fromId is NULL, see vignette for more details)\\cr
+       param - fromAddress (conditionally required): (character string) the Name of the from place. (Only used if fromId is NULL, see vignette for more details)\\cr
+       param - toId (conditionally required): (character string) the wikidataId of the to place. (Takes priority over toName and toAddress, see vignette for more details)\\cr
+       param - toName (conditionally required): (character string) the Name of the to place. (Only used if toId is NULL, see vignette for more details)\\cr
+       param - toAddress (conditionally required): (character string) the Name of the to place. (Only used if toId is NULL, see vignette for more details)\\cr
+       param - distanceUnit (default is KM) : (character string either KM or MI) determines if distances are measured in miles or kilometres.
+       return value: The numeric value of the distance between the 2 places.
+      "
+      
       if((is.null(fromId) && is.null(fromName) && is.null(fromAddress)) ||(is.null(toId) && is.null(toName) && is.null(toAddress)) ){
         print("ERROR: Both a from and to parameter are required")
         
@@ -774,4 +950,3 @@ GEO <- setRefClass("GEO",
     }
   )
 )
-
