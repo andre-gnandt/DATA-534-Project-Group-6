@@ -1,10 +1,16 @@
-library(countrycode)
-library(httr)
-library(jsonlite)
-library(tidygeocoder)
-library(tibble)
-library(stringr)
+#' @importFrom httr GET content
+#' @importFrom jsonlite fromJSON
+#' @importFrom stringr str_detect
+#' @importFrom tidygeocoder geo
+#' @importFrom methods setRefClass
+#' @import countrycode
+NULL
 
+#' GEO API Client
+#'
+#' Reference class for interacting with the GeoDB API.
+#'
+#'@export
 GEO <- setRefClass("GEO",
   fields = list(api_key = "character", max_limit = "numeric", base_url = "character"),
   

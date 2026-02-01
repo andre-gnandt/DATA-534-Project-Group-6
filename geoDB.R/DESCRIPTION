@@ -1,0 +1,13 @@
+Package: geoDB.R
+Type: Package
+Title: An example R package
+Version: 0.0.1
+Authors@R: person("Matti", "Vuorre", email = "mv2521@columbia.edu", role = c("aut", "cre"))
+Description: This package is an example R package. It provides various functions for demonstration purposes. The description can span multiple lines, as long as subsequent lines are indented. It should be at least three full sentences for CRAN submission.
+License: GPL (>= 2)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: knitr, rmarkdown
+Imports: testthat, countrycode, httr, jsonlite, tidygeocoder, stringr, methods
+URL: 
