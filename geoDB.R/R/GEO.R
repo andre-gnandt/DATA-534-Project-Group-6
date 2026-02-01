@@ -35,7 +35,13 @@ GEO <- setRefClass("GEO",
        param - url (required): (string) of the url to make the request\\cr
        return value: returns the response in JSON format"
       
-      request <- GET(url)
+      if(!is.null(api_key) && nchar(api_key) > 0){
+        request <-  GET(url, add_headers( `X-RapidAPI-Key` = api_key,`X-RapidAPI-Host` = "wft-geo-db.p.rapidapi.com"))
+      }
+      else{
+        request <- GET(url)
+      }
+      
       response <- fromJSON(content(request, as = "text", encoding = "UTF-8"))
       
       if(request$status_code >= 300){
@@ -144,7 +150,7 @@ GEO <- setRefClass("GEO",
                                   namePrefix = NULL, 
                                   name = NULL,
                                   offset = 0, 
-                                  limit = NULL){
+                                  limit = max_limit){
       "description: Method used to find all countries and their data using the GEO db cities api\\cr
        param - currencyCode: (character string) Filter by ISO currency code\\cr
        param - includeAllColumns: (boolean) Logical return all columns\\cr
@@ -213,7 +219,7 @@ GEO <- setRefClass("GEO",
                                          distanceUnit = "KM", 
                                          radius = NULL, 
                                          offset = 0, 
-                                         limit = NULL){
+                                         limit = max_limit){
       "description: Method used to find all places near a given place and their data using the GEO db api\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - placeId (conditionally required): (character string) the wikidataId or native 'id' of the nearby place, (this takes priority over placeName and placeAddress, see vignette for more details)\\cr
@@ -385,7 +391,7 @@ GEO <- setRefClass("GEO",
                                latitude = NULL, 
                                locationAddress = NULL, 
                                offset = 0, 
-                               limit = NULL){
+                               limit = max_limit){
       "description: Method used to find all places and their data using the GEO db api\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - includeDistricts : (boolean) True if you would like to include districts in the returned places, false otherwise.\\cr
@@ -588,7 +594,7 @@ GEO <- setRefClass("GEO",
                                latitude = NULL, 
                                locationAddress = NULL, 
                                offset = 0, 
-                               limit = NULL){
+                               limit = max_limit){
       "description: Method used to find all Cities and their data using the GEO db api\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - includeDistricts : (boolean) Default is false. True if you would like to include districts in the returned places, false otherwise.\\cr
@@ -725,7 +731,7 @@ GEO <- setRefClass("GEO",
                                                    maxPopulation = NULL, 
                                                    minPopulation = NULL, 
                                                    offset = 0, 
-                                                   limit = NULL){
+                                                   limit = max_limit){
       "description: Method used to find all places in a given country and region using the GEO db api\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\\cr
@@ -843,7 +849,7 @@ GEO <- setRefClass("GEO",
       return (list(count = count, data = as.data.frame(data)))
     },
     
-    FindRegions.ByCountry = function(includeAllColumns = FALSE, columns = NULL, country = NULL, countryId = NULL, limit = NULL, offset = 0, name = NULL){
+    FindRegions.ByCountry = function(includeAllColumns = FALSE, columns = NULL, country = NULL, countryId = NULL, limit = max_limit, offset = 0, name = NULL){
       "description: Method used to find all Regions and their data in a given country using the GEO db api\\cr
        param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\\cr
        param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\\cr
