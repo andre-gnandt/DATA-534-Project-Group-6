@@ -11,3 +11,4 @@ RoxygenNote: 7.3.2
 Suggests: knitr, rmarkdown
 Imports: testthat, countrycode, httr, jsonlite, tidygeocoder, stringr, methods
 URL: 
+Config/testthat/edition: 3

@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(DATA-534-Project-Group-6)
+library(geoDB.R)
 
-test_check("DATA-534-Project-Group-6")
+test_check("geoDB.R")
