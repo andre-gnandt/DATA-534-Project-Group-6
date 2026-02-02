@@ -2,9 +2,9 @@ name: R-CI
 
 on:
   push:
-    branches: [ Scratch ]
+    branches: [ Andre ]
   pull_request:
-    branches: [ Scratch ]
+    branches: [ Andre ]
 
 jobs:
   R-CMD-check:
@@ -31,7 +31,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
           cd geoDBapi
-          R -e 'install.packages(c("devtools","remotes"));
+          R -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive=TRUE, showWarnings=FALSE);
+                .libPaths(Sys.getenv("R_LIBS_USER"));
+                install.packages(c("devtools","remotes"), repos="https://cloud.r-project.org");
                 remotes::install_deps(dependencies = TRUE);
                 devtools::document();
                 devtools::install();
