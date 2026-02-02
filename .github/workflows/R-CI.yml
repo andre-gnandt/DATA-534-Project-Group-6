@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ Scratch ]
 
-defaults:
-  run:
-    working-directory: ./geoDBapi
-
 jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
@@ -34,6 +30,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
+          cd geoDBapi
           R -e 'install.packages(c("devtools","remotes"));
                 remotes::install_deps(dependencies = TRUE);
                 devtools::document();
