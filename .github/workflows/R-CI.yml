@@ -34,8 +34,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
-          R -e 'install.packages(c("devtools","remotes"))'
-          R -e 'remotes::install_deps(dependencies = TRUE)'
-          R -e 'devtools::document()'
-          R -e 'devtools::install()'
-          R -e 'devtools::test()'
+          R -e 'install.packages(c("devtools","remotes"));
+                remotes::install_deps(dependencies = TRUE);
+                devtools::document();
+                devtools::install();
+                devtools::test()'
