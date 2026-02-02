@@ -157,6 +157,7 @@ return value: A list with `count` for number of returned records, and `data` for
   latitude = NULL,
   locationAddress = NULL,
   offset = 0,
+  sort = NULL,
   limit = max_limit
 )}}{description: Method used to find all places and their data using the GEO db api\cr
 param - charts: (boolean) true to return a chart map, false otherwise\cr
@@ -304,7 +305,7 @@ return value: returns the ISO formatted string of the given location}
 
 \item{\code{initialize(api_key = "", max_limit = 10)}}{description: This is the constructor for this class.\cr
  param - api_key (not required) : (character string) Only pass your api key if you are using the pro version, otherwise don't change this parameter and the free version is automatically used.\cr
- param - max_limit : (numeric integer) The default limit value for calling records from the GEO DB api, check  with your plan to see what your maximum is. }
+ param - max_limit : (numeric integer) The default limit value for calling records from the GEO DB api, check  with your plan to see what your maximum is.}
 
 \item{\code{makeRequest(url)}}{description: Helper method to make api request to the given url.\cr
 param - url (required): (string) of the url to make the request\cr
