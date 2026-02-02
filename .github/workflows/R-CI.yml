@@ -13,17 +13,29 @@ defaults:
 jobs:
   R-CI:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: r-lib/actions/setup-r@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
         with:
-          use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::testthat # Ensure testthat is installed if not already a dependency
-          needs: check
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          # Optional: specify arguments to R CMD check
-          args: '--no-build-vignettes --no-manual'
+          r-version: '4.x' # Use the latest version of R 4.x
+
+      - name: Install dependencies
+        # Install system dependencies needed by R packages (if any)
+        # and install the R packages themselves including testthat.
+        run: |
+          install.packages(c("remotes", "testthat"))
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Run testthat tests
+        # The preferred method to run tests and report results
+        run: R CMD check .
+        # Alternatively, use rcmdcheck for cleaner output in the CI log:
+        # run: |
+        #   install.packages("rcmdcheck")
+        #   rcmdcheck::rcmdcheck(args = "--no-build-vignettes", error_on = "error")
+        shell: Rscript {0}
