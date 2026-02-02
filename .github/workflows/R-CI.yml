@@ -33,7 +33,7 @@ jobs:
 
       - name: Run testthat tests
         # The preferred method to run tests and report results
-        run: Rscript -e "devtools::test()"
+        run: R CMD check .
         # Alternatively, use rcmdcheck for cleaner output in the CI log:
         # run: |
         #   install.packages("rcmdcheck")
