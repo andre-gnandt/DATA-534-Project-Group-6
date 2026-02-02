@@ -1,3 +1,5 @@
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+test_that("get countries", {
+  geo <- GEO$new()
+  countries <- geo$FindCountries()
+  expect_gt(countries$count, 0)
 })
