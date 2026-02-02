@@ -38,4 +38,4 @@ jobs:
         # run: |
         #   install.packages("rcmdcheck")
         #   rcmdcheck::rcmdcheck(args = "--no-build-vignettes", error_on = "error")
-        shell: Rscript {0}
+       
