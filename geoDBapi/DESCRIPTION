@@ -1,9 +1,9 @@
 Package: geoDBapi
-Title: What the Package Does (One Line, Title Case)
+Title: Geo DB cities API wrappers
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R:
+    person(given = "Group", family = "Six", email = "gnandtandre@outlook.com", role=c("aut", "cre"))
+Description: Package for using the GEO DB cities api.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
