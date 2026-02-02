@@ -30,11 +30,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-r-
 
-      - name: Install system dependencies
+      - name: Install system dependencies and run tests
         run: |
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
-          R -e 'install.packages("remotes")'
+          R -e 'install.packages(c("devtools","remotes"))'
           R -e 'remotes::install_deps(dependencies = TRUE)'
           R -e 'devtools::document()'
           R -e 'devtools::install()'
