@@ -23,11 +23,11 @@ jobs:
         with:
           r-version: '4.x'
 
-      - name: Install dependencies
-        run: |
-          install.packages(c("remotes", "testthat", "httr", "tidygeocoder"))
-          remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
+      - name: Install package dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: httr, tidygeocoder, remotes, testthat
+          dependencies: true
 
       - name: Run testthat tests
         run: R CMD check .
