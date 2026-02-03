@@ -8,30 +8,25 @@ on:
 
 defaults:
   run:
-    working-directory: geoDBapi
+    working-directory: geoDBapi  # your package folder
 
 jobs:
   R-CI-check:
-    # Run on the latest version of Ubuntu
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: r-lib/actions/setup-r@v2
         with:
-          # Optional: specify an R version, e.g., 'release' or '4.2'
-          r-version: 'release' 
-      
-      # Install dependencies - this step installs necessary R packages
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          # Set the dependency type to 'Depends, Imports, LinkingTo'
-          extra-packages: any::testthat
-          needs: Vctrs
-          
-      # Run R CMD check, which automatically runs testthat tests
+          r-version: 'release'
+
+      # Install only external dependencies
+      - name: Install R package dependencies
+        run: |
+          install.packages(c("httr","tidygeocoder","testthat","roxygen2"))
+
+      # Build & check the package
       - uses: r-lib/actions/check-r-package@v2
         with:
-          # This runs the standard checks, including your testthat tests
           args: '--no-build-vignettes'
-       
