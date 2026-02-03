@@ -30,6 +30,7 @@ description: Reference class for interacting with the GeoDB API.
  return value: The numeric value of the distance between the 2 places.}
 
 \item{\code{FindCities(
+  chart = FALSE,
   includeDistricts = FALSE,
   includeCities = TRUE,
   includeAllColumns = FALSE,
@@ -51,6 +52,7 @@ description: Reference class for interacting with the GeoDB API.
   offset = 0,
   limit = max_limit
 )}}{description: Method used to find all Cities and their data using the GEO db api\cr
+param - chart: (boolean) if TRUE render a chart before returning data\cr
 param - charts: (boolean) true to return a chart map, false otherwise\cr
 param - includeDistricts : (boolean) Default is false. True if you would like to include districts in the returned places, false otherwise.\cr
 param - includeCities : (boolean)Default is true, True if you would like to include cities in the returned places, false otherwise.\cr
@@ -75,6 +77,7 @@ param - limit: (numeric integer) Maximum number of results, equal to 'max_limit'
 return value: A list with `count` for number of returned records, and `data` for the clean dataframe}
 
 \item{\code{FindCountries(
+  chart = FALSE,
   currencyCode = NULL,
   includeAllColumns = FALSE,
   columns = NULL,
@@ -83,6 +86,7 @@ return value: A list with `count` for number of returned records, and `data` for
   offset = 0,
   limit = max_limit
 )}}{description: Method used to find all countries and their data using the GEO db cities api\cr
+param - chart: (boolean) if TRUE render a chart before returning data\cr
 param - currencyCode: (character string) Filter by ISO currency code\cr
 param - includeAllColumns: (boolean) Logical return all columns\cr
 param - columns: (character vector) column names to include in returned dataframe
@@ -137,6 +141,7 @@ param - limit: (numeric integer) Maximum number of results, equal to 'max_limit'
 return value: A list with `count` for number of returned records, and `data` for the clean dataframe}
 
 \item{\code{FindPlaces(
+  chart = FALSE,
   includeDistricts = TRUE,
   includeCities = TRUE,
   includeIslands = TRUE,
@@ -160,6 +165,7 @@ return value: A list with `count` for number of returned records, and `data` for
   sort = NULL,
   limit = max_limit
 )}}{description: Method used to find all places and their data using the GEO db api\cr
+param - chart: (boolean) if TRUE render a chart before returning data\cr
 param - charts: (boolean) true to return a chart map, false otherwise\cr
 param - includeDistricts : (boolean) True if you would like to include districts in the returned places, false otherwise.\cr
 param - includeCities : (boolean) True if you would like to include cities in the returned places, false otherwise.\cr
@@ -185,6 +191,7 @@ param - limit: (numeric integer) Maximum number of results, equal to 'max_limit'
 return value: A list with `count` for number of returned records, and `data` for the clean dataframe}
 
 \item{\code{FindPlaces.By.CountryAndRegion(
+  chart = FALSE,
   includeDistricts = TRUE,
   includeCities = TRUE,
   includeIslands = TRUE,
@@ -202,6 +209,7 @@ return value: A list with `count` for number of returned records, and `data` for
   offset = 0,
   limit = max_limit
 )}}{description: Method used to find all places in a given country and region using the GEO db api\cr
+param - chart: (boolean) if TRUE render a chart before returning data\cr
 param - charts: (boolean) true to return a chart map, false otherwise\cr
 param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\cr
 param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\cr
@@ -222,7 +230,7 @@ param - limit: (numeric integer) Maximum number of results, equal to 'max_limit'
 return value: A list with `count` for number of returned records, and `data` for the clean dataframe}
 
 \item{\code{FindPlaces.NearPlace(
-  charts = FALSE,
+  chart = FALSE,
   placeId = NULL,
   placeName = NULL,
   placeAddress = NULL,
@@ -245,6 +253,7 @@ return value: A list with `count` for number of returned records, and `data` for
   offset = 0,
   limit = max_limit
 )}}{description: Method used to find all places near a given place and their data using the GEO db api\cr
+param - chart: (boolean) if TRUE render a chart before returning data\cr
 param - charts: (boolean) true to return a chart map, false otherwise\cr
 param - placeId (conditionally required): (character string) the wikidataId or native 'id' of the nearby place, (this takes priority over placeName and placeAddress, see vignette for more details)\cr
 param - placeName (conditionally required): (character string) the name of the nearby place, (this is only used if placeId is NULL, see vignette for more details)\cr
@@ -270,6 +279,7 @@ param - limit: (numeric integer) Maximum number of results, equal to 'max_limit'
 return value: A list with `count` for number of returned records, and `data` for the clean dataframe}
 
 \item{\code{FindRegions.ByCountry(
+  chart = FALSE,
   includeAllColumns = FALSE,
   columns = NULL,
   country = NULL,
@@ -278,6 +288,7 @@ return value: A list with `count` for number of returned records, and `data` for
   offset = 0,
   name = NULL
 )}}{description: Method used to find all Regions and their data in a given country using the GEO db api\cr
+param - chart: (boolean) if TRUE render a chart before returning data\cr
 param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\cr
 param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\cr
 param - includeAllColumns: (boolean) Logical return all columns\cr
@@ -310,5 +321,10 @@ return value: returns the ISO formatted string of the given location}
 \item{\code{makeRequest(url)}}{description: Helper method to make api request to the given url.\cr
 param - url (required): (string) of the url to make the request\cr
 return value: returns the response in JSON format}
+
+\item{\code{renderChart(df, title = NULL)}}{description: Helper method to render a quick ggplot chart for returned data frames.\cr
+param - df (required): (data.frame) returned data frame\cr
+param - title: (character string) plot title\cr
+return value: invisible ggplot object, or NULL if it can't be plotted}
 }}
 
