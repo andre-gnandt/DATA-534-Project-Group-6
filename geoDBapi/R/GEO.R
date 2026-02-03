@@ -25,7 +25,7 @@ GEO <- setRefClass("GEO",
       "
 
       api_key <<- api_key
-      max_limit <<- 10
+      max_limit <<- max_limit
       base_url <<- "http://geodb-free-service.wirefreethought.com/v1/geo/"
 
       if(nchar(api_key) > 0){
@@ -222,6 +222,7 @@ GEO <- setRefClass("GEO",
                                   offset = 0,
                                   limit = max_limit){
       "description: Method used to find all countries and their data using the GEO db cities api\\cr
+       param - chart: (boolean) if TRUE render a chart before returning data\\cr
        param - currencyCode: (character string) Filter by ISO currency code\\cr
        param - includeAllColumns: (boolean) Logical return all columns\\cr
        param - columns: (character vector) column names to include in returned dataframe
@@ -270,10 +271,6 @@ GEO <- setRefClass("GEO",
         renderChart(as.data.frame(data), title = "Countries")
       }
 
-      if(chart){
-        renderChart(as.data.frame(data), title = "Nearby Places")
-      }
-
       return (list(count = count, data = as.data.frame(data)))
     },
 
@@ -299,6 +296,7 @@ GEO <- setRefClass("GEO",
                                          offset = 0,
                                          limit = max_limit){
       "description: Method used to find all places near a given place and their data using the GEO db api\\cr
+       param - chart: (boolean) if TRUE render a chart before returning data\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - placeId (conditionally required): (character string) the wikidataId or native 'id' of the nearby place, (this takes priority over placeName and placeAddress, see vignette for more details)\\cr
        param - placeName (conditionally required): (character string) the name of the nearby place, (this is only used if placeId is NULL, see vignette for more details)\\cr
@@ -446,6 +444,10 @@ GEO <- setRefClass("GEO",
         data <- data[, !(names(data) %in% extraColumns)]
       }
 
+      if(chart){
+        renderChart(as.data.frame(data), title = "Nearby Places")
+      }
+      
       return (list(count = count, data = as.data.frame(data)))
     },
 
@@ -473,6 +475,7 @@ GEO <- setRefClass("GEO",
                               sort = NULL,
                                limit = max_limit){
       "description: Method used to find all places and their data using the GEO db api\\cr
+       param - chart: (boolean) if TRUE render a chart before returning data\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - includeDistricts : (boolean) True if you would like to include districts in the returned places, false otherwise.\\cr
        param - includeCities : (boolean) True if you would like to include cities in the returned places, false otherwise.\\cr
@@ -681,6 +684,7 @@ GEO <- setRefClass("GEO",
                                offset = 0,
                                limit = max_limit){
       "description: Method used to find all Cities and their data using the GEO db api\\cr
+       param - chart: (boolean) if TRUE render a chart before returning data\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - includeDistricts : (boolean) Default is false. True if you would like to include districts in the returned places, false otherwise.\\cr
        param - includeCities : (boolean)Default is true, True if you would like to include cities in the returned places, false otherwise.\\cr
@@ -823,6 +827,7 @@ GEO <- setRefClass("GEO",
                                                    offset = 0,
                                                    limit = max_limit){
       "description: Method used to find all places in a given country and region using the GEO db api\\cr
+       param - chart: (boolean) if TRUE render a chart before returning data\\cr
        param - charts: (boolean) true to return a chart map, false otherwise\\cr
        param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\\cr
        param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\\cr
@@ -946,6 +951,7 @@ GEO <- setRefClass("GEO",
 
     FindRegions.ByCountry = function(chart = FALSE, includeAllColumns = FALSE, columns = NULL, country = NULL, countryId = NULL, limit = max_limit, offset = 0, name = NULL){
       "description: Method used to find all Regions and their data in a given country using the GEO db api\\cr
+       param - chart: (boolean) if TRUE render a chart before returning data\\cr
        param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\\cr
        param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\\cr
        param - includeAllColumns: (boolean) Logical return all columns\\cr
