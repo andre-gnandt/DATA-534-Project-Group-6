@@ -8,7 +8,7 @@ on:
 
 defaults:
   run:
-    working-directory: geoDBapi  # your package folder
+    working-directory: geoDBapi 
 
 jobs:
   R-CI-check:
@@ -35,6 +35,5 @@ jobs:
           cache: true
           pak-args: --binary
       
-      #RUN TESTS
       - name: Run tests
         run: R CMD check . --no-manual
