@@ -31,7 +31,5 @@ jobs:
             any::roxygen2
             any::rcmdcheck
 
-      # Build & check the package
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          args: '--no-build-vignettes'
+      - name: Run tests
+        run: R CMD check .
