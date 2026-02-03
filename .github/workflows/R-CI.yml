@@ -37,4 +37,4 @@ jobs:
       
       #RUN TESTS
       - name: Run tests
-        run: R CMD check .
+        run: R CMD check . --no-manual
