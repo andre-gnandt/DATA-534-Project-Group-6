@@ -29,6 +29,7 @@ jobs:
             any::tidygeocoder
             any::testthat
             any::roxygen2
+            any::rcmdcheck
 
       # Build & check the package
       - uses: r-lib/actions/check-r-package@v2
