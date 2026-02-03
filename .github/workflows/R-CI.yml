@@ -21,10 +21,14 @@ jobs:
         with:
           r-version: 'release'
 
-      # Install only external dependencies
-      - name: Install R package dependencies
-        run: |
-          Rscript -e 'install.packages(c("httr","tidygeocoder","testthat","roxygen2"))'
+      - name: Install specific packages
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::httr
+            any::tidygeocoder
+            any::testthat
+            any::roxygen2
 
       # Build & check the package
       - uses: r-lib/actions/check-r-package@v2
