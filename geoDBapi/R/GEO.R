@@ -56,6 +56,75 @@ GEO <- setRefClass("GEO",
       return (response)
     },
 
+    renderChart = function(df, title = NULL){
+      "description: Helper method to render a quick ggplot chart for returned data frames.\cr
+       param - df (required): (data.frame) returned data frame\cr
+       param - title: (character string) plot title\cr
+       return value: invisible ggplot object, or NULL if it can't be plotted"
+
+      if(is.null(df) || !is.data.frame(df) || nrow(df) < 1){
+        return (invisible(NULL))
+      }
+
+      lat_col <- intersect(c("latitude","lat"), names(df))
+      lon_col <- intersect(c("longitude","lon","lng"), names(df))
+      pop_col <- intersect(c("population","pop"), names(df))
+      name_col <- intersect(c("name","city","country","region"), names(df))
+
+      if(length(lat_col) > 0 && length(lon_col) > 0){
+
+        x <- lon_col[1]
+        y <- lat_col[1]
+
+        if(length(pop_col) > 0){
+          s <- pop_col[1]
+          p <- ggplot2::ggplot(df, ggplot2::aes(x = .data[[x]], y = .data[[y]])) +
+            ggplot2::geom_point(ggplot2::aes(size = .data[[s]]), alpha = 0.7) +
+            ggplot2::scale_size_continuous(name = "Population") +
+            ggplot2::coord_fixed() +
+            ggplot2::labs(title = title, x = "Longitude", y = "Latitude") +
+            ggplot2::theme_minimal()
+        } else {
+          p <- ggplot2::ggplot(df, ggplot2::aes(x = .data[[x]], y = .data[[y]])) +
+            ggplot2::geom_point(alpha = 0.7) +
+            ggplot2::coord_fixed() +
+            ggplot2::labs(title = title, x = "Longitude", y = "Latitude") +
+            ggplot2::theme_minimal()
+        }
+
+        print(p)
+        return (invisible(p))
+      }
+
+      if(length(name_col) > 0 && length(pop_col) > 0){
+
+        n <- name_col[1]
+        s <- pop_col[1]
+
+        tmp <- df
+        tmp[[s]] <- suppressWarnings(as.numeric(tmp[[s]]))
+        tmp <- tmp[!is.na(tmp[[s]]), ]
+        if(nrow(tmp) < 1){
+          return (invisible(NULL))
+        }
+
+        tmp <- tmp[order(tmp[[s]], decreasing = TRUE), ]
+        tmp <- utils::head(tmp, 10)
+
+        p <- ggplot2::ggplot(tmp, ggplot2::aes(x = stats::reorder(.data[[n]], .data[[s]]), y = .data[[s]])) +
+          ggplot2::geom_col() +
+          ggplot2::coord_flip() +
+          ggplot2::labs(title = title, x = NULL, y = "Population") +
+          ggplot2::theme_minimal()
+
+        print(p)
+        return (invisible(p))
+      }
+
+      return (invisible(NULL))
+    },
+
+
     getCountryNamesAndCodes = function(){
       "description: Helper method to get a dataframe of all country names and country codes.\\cr
        return value: returns the dataframe with columns: name, code2, and code3"
@@ -144,7 +213,8 @@ GEO <- setRefClass("GEO",
       return (convertLongitudeLatitudeToISO(geocoded_address[1,2],geocoded_address[1,3]))
     },
 
-    FindCountries = function(currencyCode = NULL,
+    FindCountries = function(chart = FALSE,
+                                  currencyCode = NULL,
                                   includeAllColumns = FALSE,
                                   columns = NULL,
                                   namePrefix = NULL,
@@ -196,10 +266,18 @@ GEO <- setRefClass("GEO",
         data <- data[, !(names(data) %in% extraColumns)]
       }
 
+      if(chart){
+        renderChart(as.data.frame(data), title = "Countries")
+      }
+
+      if(chart){
+        renderChart(as.data.frame(data), title = "Nearby Places")
+      }
+
       return (list(count = count, data = as.data.frame(data)))
     },
 
-    FindPlaces.NearPlace = function(charts = FALSE, placeId = NULL,
+    FindPlaces.NearPlace = function(chart = FALSE, placeId = NULL,
                                          placeName = NULL,
                                          placeAddress = NULL,
                                          includeDistricts = TRUE,
@@ -371,7 +449,8 @@ GEO <- setRefClass("GEO",
       return (list(count = count, data = as.data.frame(data)))
     },
 
-    FindPlaces = function(includeDistricts = TRUE,
+    FindPlaces = function(chart = FALSE,
+                               includeDistricts = TRUE,
                                includeCities = TRUE,
                                includeIslands = TRUE,
                                includeAllColumns = FALSE,
@@ -521,6 +600,10 @@ GEO <- setRefClass("GEO",
         data <- data[, !(names(data) %in% extraColumns)]
       }
 
+      if(chart){
+        renderChart(as.data.frame(data), title = "Places")
+      }
+
       return (list(count = count, data = as.data.frame(data)))
     },
 
@@ -576,7 +659,8 @@ GEO <- setRefClass("GEO",
       return (FindCities(includeCities = FALSE, ...))
     },
 
-    FindCities = function(includeDistricts = FALSE,
+    FindCities = function(chart = FALSE,
+                               includeDistricts = FALSE,
                                includeCities = TRUE,
                                includeAllColumns = FALSE,
                                columns = NULL,
@@ -714,10 +798,15 @@ GEO <- setRefClass("GEO",
         data <- data[, !(names(data) %in% extraColumns)]
       }
 
+      if(chart){
+        renderChart(as.data.frame(data), title = "Cities")
+      }
+
       return (list(count = count, data = as.data.frame(data)))
     },
 
-    FindPlaces.By.CountryAndRegion = function(includeDistricts = TRUE,
+    FindPlaces.By.CountryAndRegion = function(chart = FALSE,
+                                                   includeDistricts = TRUE,
                                                    includeCities = TRUE,
                                                    includeIslands = TRUE,
                                                    includeAllColumns = FALSE,
@@ -847,10 +936,15 @@ GEO <- setRefClass("GEO",
         data <- data[, !(names(data) %in% extraColumns)]
       }
 
+      if(chart){
+        renderChart(as.data.frame(data), title = "Places by Country/Region")
+      }
+
+
       return (list(count = count, data = as.data.frame(data)))
     },
 
-    FindRegions.ByCountry = function(includeAllColumns = FALSE, columns = NULL, country = NULL, countryId = NULL, limit = max_limit, offset = 0, name = NULL){
+    FindRegions.ByCountry = function(chart = FALSE, includeAllColumns = FALSE, columns = NULL, country = NULL, countryId = NULL, limit = max_limit, offset = 0, name = NULL){
       "description: Method used to find all Regions and their data in a given country using the GEO db api\\cr
        param - country (conditionally required): (character string) name of the given Country (only used if countryId is NULL, see vignette for more details)\\cr
        param - countryId (conditionally required): (character string) wikidataId or country code of given country (takes priority over country param, see vignette for more details)\\cr
@@ -900,6 +994,11 @@ GEO <- setRefClass("GEO",
         extraColumns = c("city")
         data <- data[, !(names(data) %in% extraColumns)]
       }
+
+      if(chart){
+        renderChart(as.data.frame(data), title = "Regions by Country")
+      }
+
 
       return (list(count = count, data = as.data.frame(data)))
     },
