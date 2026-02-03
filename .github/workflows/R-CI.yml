@@ -28,8 +28,10 @@ jobs:
             any::httr
             any::tidygeocoder
             any::testthat
-            any::roxygen2
-            any::rcmdcheck
+            any::countrycode
+            any::jsonlite
+            any::stringr
+            any::methods
       
       #RUN TESTS
       - name: Run tests
