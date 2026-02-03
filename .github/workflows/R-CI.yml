@@ -26,8 +26,7 @@ jobs:
       - name: Install package dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: httr, tidygeocoder, remotes, testthat
-          dependencies: true
+          extra-packages: httr,tidygeocoder,remotes,testthat
 
       - name: Run testthat tests
         run: R CMD check .
