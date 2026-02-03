@@ -30,6 +30,7 @@ jobs:
             any::testthat
             any::roxygen2
             any::rcmdcheck
-
+      
+      #RUN TESTS
       - name: Run tests
         run: R CMD check .
