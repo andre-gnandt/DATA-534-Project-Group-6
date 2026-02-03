@@ -1,0 +1,32 @@
+---
+title: "Diary-NoteBook"
+author: "Andre Gnandt"
+date: "`r Sys.Date()`"
+output: html_document
+---
+# Saturday January 24 - start new project idea and basic wrapper functions
+On this day I found our new idea for our project. During the proposal presentation on January 22 we found out that our project idea was already taken by another group, and were told to restart our entire project and find a new proposal idea. So on January 18 I found the GEO DB cities api and read the documentation and chose this api for our new project idea. I also started some basic code for wrapping some of the API's.  
+  
+# January 25 - 26
+Nothing to work on these days.
+  
+# Tuesday January 27 - continuing basic source code
+I continued basic source code for the api wrappers including boilerplate functions like "makeRequest" and storing the api endpoints, api keys and max limit paging in global variables. I also started on the "Find Cities" api wrapper. See later commit which includes some of this work: https://github.com/andre-gnandt/DATA-534-Project-Group-6/commit/6f0c5506f61526327a5a23150cb5f8987d8cd258  
+  
+# January 28
+Nothing to work on
+  
+# Thursday January 29 - continued source code wrappers
+I continued writing the source code wrappers for all api endpoints like to find places, find places near place, find countries etc. I also started on the code for converting the method parameters of raw addresses and place names into proper ISO lat/long format for the api endpoints.  
+  
+# January 30
+Nothing to work on
+  
+# Saturday January 31 - Complete source code wrappers class foundation, package structure and documentation
+I finished the bulk of the api wrappers in source code and placed it into an RC class called "GEO" in GEO.R. This also included converting location addresses to lat/long, country code lookups, wikidataId lookups from addresse and more. I also initialized the package structure with Description, Namespace and testthat configured. I also generated documentation and vignettes from my roxygen comments on the class. See commits: https://github.com/andre-gnandt/DATA-534-Project-Group-6/commits/Andre?since=2026-01-31&until=2026-01-31 
+  
+# Sunday February 1 - Package structure fixes, cleanup and start of continuous integration
+I fixed many things including namespace, description and testthat configuration in order for our package to properly work. I cleanup the repo up. I started our continuous integration using github actions and continuously tried updating the yaml file to get it to properly run our testthat tests. I also added the contributions Markdown file. I also fixed a small bug in the "Find Places by place" and "Distance between places" source code methods. See commits: https://github.com/andre-gnandt/DATA-534-Project-Group-6/commits/Andre?since=2026-02-01&until=2026-02-01  
+  
+# Monday February 2 - Add Code of Conduct, fix package config for continuous integration
+I added the code of conduct to the package. I fix some configurations of  the yaml and DESCIPTION files in order for the Continuous Integration to properly work. See commits: https://github.com/andre-gnandt/DATA-534-Project-Group-6/commits/Andre?since=2026-02-02&until=2026-02-02

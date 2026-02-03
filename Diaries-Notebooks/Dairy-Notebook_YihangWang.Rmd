@@ -1,0 +1,33 @@
+---
+title: "Diary-NoteBook"
+author: "Yihang Wang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# January 24
+After the proposal presentation, our group learned that the original project idea had already been taken. We discussed restarting the project and explored alternative APIs. Together with the team, I reviewed the GEO DB Cities API documentation to understand the available data and endpoints.
+
+# January 25 - 26
+No direct implementation work during these days. Continued following group discussions and thinking about possible extensions to improve usability of the project.
+
+# January 27
+The team continued researching the GEO DB Cities API and divided responsibilities. At this stage, I focused on understanding the structure of the data returned by the API and considered how visualization could later be integrated once the wrapper implementation progressed.
+
+# January 28
+While Andre was actively working on the core wrapper structure, I waited for the wrapper to stabilize and in parallel explored possible chart designs using example GEO DB responses. Looked into how latitude, longitude, and population fields could be used for plotting.
+
+# January 29
+Continued experimenting with chart ideas and discussed with the team how optional visualization could be triggered without affecting existing return values. Planned a consistent `chart` parameter behavior that could be applied across multiple GEO methods.
+
+# January 30
+No major coding work on this day. Continued monitoring wrapper progress and refining chart logic ideas to align with the existing code style.
+
+# January 31
+After receiving the initial skeleton of the GEO class from the team, I started integrating chart-related functionality. Added a reusable chart-rendering helper that could visualize returned data frames without modifying the wrapper’s core logic.
+
+# Sunday February 1
+Extended chart support to additional GEO methods by using the same helper function. Ensured charts were only rendered when explicitly requested and that returned data frames remained unchanged.
+
+# Monday February 2
+Finalized documentation describing the `chart` parameter and chart behavior in the README. Reviewed chart integration to ensure consistency with the rest of the codebase and pushed my updates to the repository.

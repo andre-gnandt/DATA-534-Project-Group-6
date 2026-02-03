@@ -4,8 +4,11 @@
 ## Members:  
 ### Andre Gnandt 
 ### Yihang Wang 
-### Manpreet Singh
-
+### Manpreet Singh  
+  
+# Notebook/Diaries
+See folder /Diaries-Notebooks  
+  
 # Source code:
 See folder /geoDBapi/R  
   

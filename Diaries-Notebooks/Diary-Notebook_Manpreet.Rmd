@@ -1,0 +1,33 @@
+---
+title: "Diary-NoteBook"
+author: "Manpreet Singh"
+date: "`r Sys.Date()`"
+output: html_document
+---
+# January 24 
+On this day, we came up with a new idea for our project. During the proposal presentation on January 22, we learned that our original project idea had already been taken by another group. Because of this, we were asked to restart the project and come up with a completely new proposal.
+After that, Andre explored the GEO DB Cities API and we went through its documentation. Based on its features and data, we decided to use this API for our new project idea.
+  
+# January 25 - 26
+Nothing to work on these days.
+  
+#  January 27 
+Continuing doing Research on this API and it's feature and divided the work among the groups.
+
+# January 28
+As my teammate was working on the wrapper, I started how to implement unit and integration testing using R.
+  
+#  January 29 
+Research and trials continued on how to perform testing and what libraries we needed o do so.  
+  
+# January 30
+Nothing to work on
+  
+#  January 31
+Got the skeleton of the code from the team and started exploring it. 
+  
+# Sunday February 1
+Set up the project in my local and started writing unit test cases. Fixed few things in the code as initially few test cases were failing but this helped to identify few sections in the code that were missing.  
+  
+# Monday February 2 - Add Code of Conduct, fix package config for continuous integration
+Finished unit testing and integration testing and when all the test cases started to pass, i pushed the code to git to share with others.
