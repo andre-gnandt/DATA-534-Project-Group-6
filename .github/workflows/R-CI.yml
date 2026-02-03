@@ -25,13 +25,12 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
-            any::httr
-            any::tidygeocoder
-            any::testthat
-            any::countrycode
-            any::jsonlite
-            any::stringr
-            any::methods
+            httr
+            tidygeocoder
+            testthat
+            countrycode
+            jsonlite
+            stringr
       
       #RUN TESTS
       - name: Run tests
