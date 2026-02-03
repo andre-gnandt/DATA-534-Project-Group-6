@@ -25,7 +25,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "testthat"))
+          install.packages(c("remotes", "testthat", "httr", "tidygeocoder"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
