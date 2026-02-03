@@ -2,9 +2,9 @@ name: R-CI
 
 on:
   push:
-    branches: [ Andre ]
+    branches: [ main ]
   pull_request:
-    branches: [ Andre ]
+    branches: [ main ]
 
 defaults:
   run:
