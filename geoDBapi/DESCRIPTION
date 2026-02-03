@@ -1,8 +1,8 @@
 Package: geoDBapi
 Title: Geo DB cities API wrappers
 Version: 0.0.0.9000
-Authors@R:
-    person(given = "Andre", family = "Gnandt", email = "gnandtandre@outlook.com", role = c("aut", "cre"))
+Author: Andre Gnandt <gnandtandre@outlook.com>
+Maintainer: Andre Gnandt <gnandtandre@outlook.com>
 Description: Package for using the GEO DB cities api.
 License: MIT + file LICENSE
 Encoding: UTF-8
